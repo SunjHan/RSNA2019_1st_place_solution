@@ -26,7 +26,7 @@ class StackingDataset_study(Dataset):
 
         if mode == 'train' or mode == 'valid':
             self.all_df = pd.read_csv(r'./csv/train_meta_id_seriser.csv')
-            self.StudyInstance = list(self.all_df['StudyInstance'].unique())
+            self.StudyInstance = list(self.all_df['StudyInstance'].unique()) #unique函数去除其中重复的元素 #StudyInstance检查实例号：
             self.index = index
             self.len = len(index)
 
@@ -48,7 +48,7 @@ class StackingDataset_study(Dataset):
         else:
             StudyInstance = self.StudyInstance[index]
 
-        if StudyInstance not in self.study_dict:
+        if StudyInstance not in self.study_dict: #读入一个study_dict中具有相同PatientID的数据
             self.study_dict[StudyInstance] = pd.read_csv(os.path.join(study_path, 'study_csv', StudyInstance + '.csv'))
 
         same_StudyInstance = self.study_dict[StudyInstance]
@@ -59,10 +59,10 @@ class StackingDataset_study(Dataset):
         if self.mode == 'train' and len(all_index) > 10:
             if random.randint(0,1) == 0:
                 rd = random.randint(0, 1)
-                all_index = [all_index[i] for i in range(len(all_index)) if i %2 == rd]
+                all_index = [all_index[i] for i in range(len(all_index)) if i %2 == rd] #随机取出一些数据？
                 Position2 = [Position2[i] for i in range(len(Position2)) if i %2 == rd]
 
-        if self.Add_position:
+        if self.Add_position: #？？？
             Position2 = [Position2[i + 1] - Position2[i] for i in range(len(Position2) - 1)]
             Position2.append(Position2[-1])
             X_position2 = np.asarray(Position2).reshape([-1, 1, 1])
